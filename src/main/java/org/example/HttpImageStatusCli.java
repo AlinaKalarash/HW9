@@ -1,14 +1,30 @@
 package org.example;
 
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+import static org.example.Texts.FILE_NOT_FOUND_EXCEPTION_TEXT;
+import static org.example.Texts.ENTER_HTTP_STATUS;
+
 public class HttpImageStatusCli {
 
-//    TODO:
-//      запитати у юзера код статусу (наприклад, Enter HTTP status code)
-//      юзер вводить в консоль код статусу (наприклад, 200)
-//      програма перевіряє, чи є картинка для цього статусу на сайті https://http.cat, і якщо є - то скачує цю картинку.
-//          Якщо ж картинки немає - виводить в консоль фразу There is not image for HTTP status <CODE> (замість <CODE> підставляється код статусу, що ввів користувач)
-//      якщо користувач вводить некоректне число (наприклад, test) - програма має вивести фразу Please enter valid number
     void askStatus() {
+        System.out.println(ENTER_HTTP_STATUS);
+        Scanner scanner = new Scanner(System.in);
+        int statusCode = scanner.nextInt();
+        try {
+            String url = new HttpStatusChecker().getStatusImage(statusCode);
+            if (url.length() > 1) {
+                HttpStatusImageDownloader downloader = new HttpStatusImageDownloader();
+                downloader.downloadStatusImage(statusCode);
+            }
+        } catch (Exception e) {
+            System.out.println(String.format(FILE_NOT_FOUND_EXCEPTION_TEXT, statusCode));
+        }
+    }
 
+    public static void main(String[] args) {
+        HttpImageStatusCli cli = new HttpImageStatusCli();
+        cli.askStatus();
     }
 }

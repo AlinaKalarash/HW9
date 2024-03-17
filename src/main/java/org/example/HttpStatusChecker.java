@@ -1,13 +1,24 @@
 package org.example;
 
+import java.io.FileNotFoundException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import static org.example.Texts.START_URL;
+import static org.example.Texts.EXTENSION;
+import static org.example.Texts.FILE_NOT_FOUND_EXCEPTION_TEXT;
+
 public class HttpStatusChecker {
 
-//    TODO:
-//      Якщо для відповідного коду картинки немає (сайт https://http.cat повернув 404) - метод викидає Exception.
-//      Наприклад, виклик getStatusImage(200) має повернути рядок https://http.cat/200.jpg.
-//      А виклик getStatusImage(10000) має викинути виключення,
-//      тому що сайт https://http.cat поверне код відповіді 404
-    String getStatusImage(int code) {
-        return "https://http.cat/"+code+".jpg";
+    String getStatusImage(int code) throws Exception {
+        String url = START_URL + code + EXTENSION;
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        int response = connection.getResponseCode();
+        if (response == 404) {
+            System.out.println(String.format(FILE_NOT_FOUND_EXCEPTION_TEXT, code));
+            throw new FileNotFoundException(String.format(FILE_NOT_FOUND_EXCEPTION_TEXT, code));
+        } else {
+            return url;
+        }
     }
 }
