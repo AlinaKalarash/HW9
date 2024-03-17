@@ -1,6 +1,6 @@
 # Ignore all files and directories except src/ directory
-/*
-!/src/
+*
+!.src/
 
 # Include build.gradle file
 !build.gradle
